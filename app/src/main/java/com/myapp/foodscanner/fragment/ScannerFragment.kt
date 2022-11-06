@@ -5,14 +5,14 @@ import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
-import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentContainerView
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
@@ -43,6 +43,7 @@ class ScannerFragment : Fragment() , ArchitecturalFunctions {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         instantiate()
         initialize()
         listen()
@@ -116,21 +117,42 @@ class ScannerFragment : Fragment() , ArchitecturalFunctions {
             override fun receiveDetections(detections: Detector.Detections<Barcode>) {
                 val barcodes = detections.detectedItems
                 if (barcodes.size() != 0) {
+
+                    var barcodeData = ""
                     binding.barcodeText.post(Runnable {
+
                         if (barcodes.valueAt(0).email != null) {
                             binding.barcodeText.removeCallbacks(null)
-                            val barcodeData = barcodes.valueAt(0).email.address
+                            barcodeData = barcodes.valueAt(0).email.address
                             binding.barcodeText.text = barcodeData
                             toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
+                            navigateToProductFragment(barcodeData);
                         } else {
-                            val barcodeData = barcodes.valueAt(0).displayValue
+                            barcodeData = barcodes.valueAt(0).displayValue
                             binding.barcodeText.text = barcodeData
                             toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
+                            navigateToProductFragment(barcodeData)
                         }
+
                     })
+
+
                 }
             }
         })
+    }
+
+    fun navigateToProductFragment(barcodeData: String) {
+        val bundle = Bundle()
+        Log.i("--TAG--", "barcode code code- $barcodeData")
+        bundle.putString("barcode",barcodeData)
+        val productFragment = ProductFragment()
+        productFragment.arguments = bundle
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(requireActivity().findViewById<FragmentContainerView>(R.id.fragmentContainer).id,productFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 
 }
