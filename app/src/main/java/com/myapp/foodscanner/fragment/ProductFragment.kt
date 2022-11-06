@@ -7,13 +7,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.myapp.foodscanner.*
+import com.myapp.foodscanner.adapter.NutrientsAdapter
+import com.myapp.foodscanner.data.AllProducts
+import com.myapp.foodscanner.data.Nutrients
+import com.myapp.foodscanner.databinding.FragmentProductBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.create
+import kotlinx.coroutines.withContext
+import retrofit2.Response
 
 
 class ProductFragment : Fragment(), ArchitecturalFunctions {
 
+    private lateinit var barcode: String
+    private lateinit var binding: FragmentProductBinding
+    private lateinit var nutrientsAdapter : NutrientsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +34,8 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product, container, false)
+        binding = FragmentProductBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,7 +48,7 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
     }
 
     override fun instantiate() {
-        val barcode = requireArguments().getString("barcode")
+        barcode = requireArguments().getString("barcode").toString()
         Log.i("--TAG--", "" + barcode)
 
     }
@@ -53,12 +63,44 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
 
     override fun load() {
 
-        val Products = Retrofit.getInstance().create(FoodService::class.java)
+        val Product = Retrofit.getInstance().create(FoodService::class.java)
+        var productId : Int
 
         GlobalScope.launch {
-            val result = Products.getAllProduct()
+            var result = Product.getProduct(barcode)
             Log.i("--TAG--", "barcode in api call ${result.body().toString()}")
+            populateData(result.body())
+
+            kotlin.run {
+                GlobalScope.launch {
+                    val nutrients = result.body()?.get(0)?.id?.let { Product.getNutrients(it) }
+                    if (nutrients != null) {
+                        Log.i("--TAG--", "nutrients ${nutrients.body().toString()}")
+                        populateNutrients(nutrients.body())
+                    }
+                }
+            }
         }
+
+
+
+    }
+
+    private fun populateData(body: ArrayList<AllProducts>?) {
+
+        val data = body?.get(0)
+        binding.tvProductName.text = data?.name + " (${data?.weight} g)"
+        binding.tvBarcode.text = data?.barcode
+
+    }
+
+    private fun populateNutrients(nutrients: ArrayList<Nutrients>?) {
+        if(nutrients!=null){
+            nutrientsAdapter = nutrients.let { NutrientsAdapter(it) }
+            binding.rvNutrition.adapter = nutrientsAdapter
+            nutrientsAdapter.notifyDataSetChanged()
+        }
+
 
     }
 }
