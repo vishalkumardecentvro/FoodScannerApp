@@ -1,5 +1,6 @@
 package com.myapp.foodscanner.fragment
 
+import android.icu.number.NumberFormatter.with
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import com.myapp.foodscanner.adapter.NutrientsAdapter
 import com.myapp.foodscanner.data.AllProducts
 import com.myapp.foodscanner.data.Nutrients
 import com.myapp.foodscanner.databinding.FragmentProductBinding
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -136,9 +138,12 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
 
         if (body?.size!! > 0) {
 
-            val data = body?.get(0)
-            binding.tvProductName.text = data?.name + " (${data?.weight} g)"
-            binding.tvBarcode.text = data?.barcode
+            val data = body[0]
+
+            binding.tvProductName.text = data.name + " (${data.weight} g)"
+            binding.tvBarcode.text = data.barcode
+            binding.tvDescription.text = data.description
+            Picasso.get().load(data.image).into(binding.ivProductImage)
 
         } else {
             Log.i("--TAG--", "body size ${body.size}")

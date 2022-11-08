@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:padding="5dp"
     tools:context=".fragment.ProductFragment">
 
     <LinearLayout
@@ -17,37 +18,54 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:text="@string/hello_blank_fragment"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:text="@string/hello_blank_fragment" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvBarcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="16sp"
             android:layout_margin="5dp"
-            android:text="@string/hello_blank_fragment" />
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/ivProductImage"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_margin="5dp"
-            android:text="@string/hello_blank_fragment" />
+            android:scaleType="fitCenter"/>
+
+        <TextView
+            android:id="@+id/tvNutrientLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Nutrients"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvNutrition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/hello_blank_fragment"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/rv_nutrients"
-            android:layout_margin="5dp"
-            android:text="@string/hello_blank_fragment" />
+            tools:listitem="@layout/rv_nutrients" />
 
     </LinearLayout>
 
