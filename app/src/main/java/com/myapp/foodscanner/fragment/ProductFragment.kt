@@ -6,15 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.myapp.foodscanner.*
 import com.myapp.foodscanner.adapter.NutrientsAdapter
 import com.myapp.foodscanner.data.AllProducts
 import com.myapp.foodscanner.data.Nutrients
 import com.myapp.foodscanner.databinding.FragmentProductBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 
@@ -22,7 +22,8 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
 
     private lateinit var barcode: String
     private lateinit var binding: FragmentProductBinding
-    private lateinit var nutrientsAdapter : NutrientsAdapter
+    private lateinit var nutrientsAdapter: NutrientsAdapter
+    //private lateinit var viewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,38 +65,90 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
     override fun load() {
 
         val Product = Retrofit.getInstance().create(FoodService::class.java)
-        var productId : Int
 
-        GlobalScope.launch {
-            var result = Product.getProduct(barcode)
-            Log.i("--TAG--", "barcode in api call ${result.body().toString()}")
-            populateData(result.body())
+        val productDetails = Product.getProduct(barcode.toString())
 
-            kotlin.run {
-                GlobalScope.launch {
-                    val nutrients = result.body()?.get(0)?.id?.let { Product.getNutrients(it) }
-                    if (nutrients != null) {
-                        Log.i("--TAG--", "nutrients ${nutrients.body().toString()}")
-                        populateNutrients(nutrients.body())
+
+        productDetails.enqueue(object : Callback<ArrayList<AllProducts>> {
+
+            override fun onResponse(call: Call<ArrayList<AllProducts>>, response: Response<ArrayList<AllProducts>>) {
+                Log.i("--TAG--", response.body().toString())
+
+                if (response.isSuccessful && response.body()?.size!! >0) {
+
+                    populateData(response.body())
+
+                    if(response.body()?.size!! > 0){
+
+                        val nutrients = response.body()?.get(0)?.let { Product.getNutrients(it.id) }
+
+                        nutrients?.enqueue(object : Callback<ArrayList<Nutrients>>{
+                            override fun onResponse(
+                                call: Call<ArrayList<Nutrients>>,
+                                response: Response<ArrayList<Nutrients>>
+                            ) {
+                                if(response.isSuccessful && response.body()?.size!! >0){
+                                    populateNutrients(response.body())
+                                }
+                            }
+
+                            override fun onFailure(call: Call<ArrayList<Nutrients>>, t: Throwable) {
+                                Log.i("--TAG--", "error in nutrient details = $t")
+                            }
+
+                        })
+
                     }
+
+                }else{
+                    Toast.makeText(requireContext(),"response is unsuccessful or response body size is empty",Toast.LENGTH_SHORT).show()
+                    Log.i("--TAG--","response body size = ${response.body()?.size!!}")
                 }
             }
-        }
 
+            override fun onFailure(call: Call<ArrayList<AllProducts>>, t: Throwable) {
+                Log.i("--TAG--", "error in product details = $t")
+            }
 
+        })
+
+//        if (productDetails.isSuccessful) {
+//
+//            populateData(productDetails.body())
+//
+//            if (productDetails.body()?.size!! > 0) {
+//                val nutrientDetails =
+//                    productDetails.body()?.get(0)?.let { Product.getNutrients(it.id) }
+//
+//                if (nutrientDetails != null) {
+//                    if (nutrientDetails.isSuccessful && nutrientDetails.body()?.size!! > 0) {
+//                        populateNutrients(nutrientDetails.body())
+//                    }
+//
+//                }
+//            }
+//
+//        }
 
     }
 
     private fun populateData(body: ArrayList<AllProducts>?) {
 
-        val data = body?.get(0)
-        binding.tvProductName.text = data?.name + " (${data?.weight} g)"
-        binding.tvBarcode.text = data?.barcode
+        if (body?.size!! > 0) {
+
+            val data = body?.get(0)
+            binding.tvProductName.text = data?.name + " (${data?.weight} g)"
+            binding.tvBarcode.text = data?.barcode
+
+        } else {
+            Log.i("--TAG--", "body size ${body.size}")
+        }
+
 
     }
 
     private fun populateNutrients(nutrients: ArrayList<Nutrients>?) {
-        if(nutrients!=null){
+        if (nutrients != null) {
             nutrientsAdapter = nutrients.let { NutrientsAdapter(it) }
             binding.rvNutrition.adapter = nutrientsAdapter
             nutrientsAdapter.notifyDataSetChanged()
