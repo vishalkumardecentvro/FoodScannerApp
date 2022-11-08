@@ -1,6 +1,5 @@
 package com.myapp.foodscanner.fragment
 
-import android.icu.number.NumberFormatter.with
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,13 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.android.material.tabs.TabLayout
 import com.myapp.foodscanner.*
 import com.myapp.foodscanner.adapter.NutrientsAdapter
+import com.myapp.foodscanner.adapter.ViewPagerAdapter
 import com.myapp.foodscanner.data.AllProducts
 import com.myapp.foodscanner.data.Nutrients
 import com.myapp.foodscanner.databinding.FragmentProductBinding
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,6 +25,7 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
     private lateinit var barcode: String
     private lateinit var binding: FragmentProductBinding
     private lateinit var nutrientsAdapter: NutrientsAdapter
+    private lateinit var bundle: Bundle
     //private lateinit var viewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,9 +59,25 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
 
     override fun initialize() {
 
+
     }
 
     override fun listen() {
+
+        binding.tlTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+
+
+                tab?.position?.let { binding.vpIngredientsAndNutrients.currentItem = it }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+        })
 
     }
 
@@ -73,38 +90,51 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
 
         productDetails.enqueue(object : Callback<ArrayList<AllProducts>> {
 
-            override fun onResponse(call: Call<ArrayList<AllProducts>>, response: Response<ArrayList<AllProducts>>) {
+            override fun onResponse(
+                call: Call<ArrayList<AllProducts>>,
+                response: Response<ArrayList<AllProducts>>
+            ) {
                 Log.i("--TAG--", response.body().toString())
 
-                if (response.isSuccessful && response.body()?.size!! >0) {
+                if (response.isSuccessful && response.body()?.size!! > 0) {
 
                     populateData(response.body())
 
-                    if(response.body()?.size!! > 0){
-
-                        val nutrients = response.body()?.get(0)?.let { Product.getNutrients(it.id) }
-
-                        nutrients?.enqueue(object : Callback<ArrayList<Nutrients>>{
-                            override fun onResponse(
-                                call: Call<ArrayList<Nutrients>>,
-                                response: Response<ArrayList<Nutrients>>
-                            ) {
-                                if(response.isSuccessful && response.body()?.size!! >0){
-                                    populateNutrients(response.body())
-                                }
-                            }
-
-                            override fun onFailure(call: Call<ArrayList<Nutrients>>, t: Throwable) {
-                                Log.i("--TAG--", "error in nutrient details = $t")
-                            }
-
-                        })
-
+                    bundle = Bundle()
+                    bundle.apply {
+                        putInt("productId", response.body()!![0].id)
                     }
+                    binding.vpIngredientsAndNutrients.adapter = ViewPagerAdapter(requireActivity(),bundle)
 
-                }else{
-                    Toast.makeText(requireContext(),"response is unsuccessful or response body size is empty",Toast.LENGTH_SHORT).show()
-                    Log.i("--TAG--","response body size = ${response.body()?.size!!}")
+//                    if (response.body()?.size!! > 0) {
+//
+//                        val nutrients = response.body()?.get(0)?.let { Product.getNutrients(it.id) }
+//
+//                        nutrients?.enqueue(object : Callback<ArrayList<Nutrients>> {
+//                            override fun onResponse(
+//                                call: Call<ArrayList<Nutrients>>,
+//                                response: Response<ArrayList<Nutrients>>
+//                            ) {
+//                                if (response.isSuccessful && response.body()?.size!! > 0) {
+//                                    populateNutrients(response.body())
+//                                }
+//                            }
+//
+//                            override fun onFailure(call: Call<ArrayList<Nutrients>>, t: Throwable) {
+//                                Log.i("--TAG--", "error in nutrient details = $t")
+//                            }
+//
+//                        })
+//
+//                    }
+
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "response is unsuccessful or response body size is empty",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.i("--TAG--", "response body size = ${response.body()?.size!!}")
                 }
             }
 
@@ -113,24 +143,6 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
             }
 
         })
-
-//        if (productDetails.isSuccessful) {
-//
-//            populateData(productDetails.body())
-//
-//            if (productDetails.body()?.size!! > 0) {
-//                val nutrientDetails =
-//                    productDetails.body()?.get(0)?.let { Product.getNutrients(it.id) }
-//
-//                if (nutrientDetails != null) {
-//                    if (nutrientDetails.isSuccessful && nutrientDetails.body()?.size!! > 0) {
-//                        populateNutrients(nutrientDetails.body())
-//                    }
-//
-//                }
-//            }
-//
-//        }
 
     }
 
@@ -152,13 +164,13 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
 
     }
 
-    private fun populateNutrients(nutrients: ArrayList<Nutrients>?) {
-        if (nutrients != null) {
-            nutrientsAdapter = nutrients.let { NutrientsAdapter(it) }
-            binding.rvNutrition.adapter = nutrientsAdapter
-            nutrientsAdapter.notifyDataSetChanged()
-        }
-
-
-    }
+//    private fun populateNutrients(nutrients: ArrayList<Nutrients>?) {
+//        if (nutrients != null) {
+//            nutrientsAdapter = nutrients.let { NutrientsAdapter(it) }
+//            binding.rvNutrition.adapter = nutrientsAdapter
+//            nutrientsAdapter.notifyDataSetChanged()
+//        }
+//
+//
+//    }
 }
