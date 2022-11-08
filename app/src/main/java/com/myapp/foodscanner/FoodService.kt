@@ -15,6 +15,6 @@ interface FoodService {
     @GET("product/{barcode}")
      fun getProduct(@Path("barcode") barcode : String): Call<ArrayList<AllProducts>>
 
-    @GET("product/nutrients/{product_id}")
+    @GET("product/ingredient/{product_id}")
      fun getNutrients(@Path("product_id") productId : Int) : Call<ArrayList<Nutrients>>
 }
