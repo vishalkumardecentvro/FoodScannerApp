@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import com.myapp.foodscanner.ArchitecturalFunctions
 import com.myapp.foodscanner.FoodService
 import com.myapp.foodscanner.Retrofit
-import com.myapp.foodscanner.adapter.NutrientsAdapter
-import com.myapp.foodscanner.data.Nutrients
+import com.myapp.foodscanner.adapter.IngredientsAdapter
+import com.myapp.foodscanner.data.Ingredients
 import com.myapp.foodscanner.databinding.FragmentIngredientsBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,7 +21,7 @@ class IngredientsFragment(bundleData: Bundle) : Fragment(),ArchitecturalFunction
     private var productId = bundleData.getInt("productId")
 
     private lateinit var binding: FragmentIngredientsBinding
-    private lateinit var nutrientsAdapter: NutrientsAdapter
+    private lateinit var ingredientsAdapter: IngredientsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,19 +62,19 @@ class IngredientsFragment(bundleData: Bundle) : Fragment(),ArchitecturalFunction
 
         val Product = Retrofit.getInstance().create(FoodService::class.java)
 
-        val nutrients = Product.getNutrients(productId)
+        val ingredients = Product.getIngredients(productId)
 
-        nutrients?.enqueue(object : Callback<ArrayList<Nutrients>> {
+        ingredients?.enqueue(object : Callback<ArrayList<Ingredients>> {
             override fun onResponse(
-                call: Call<ArrayList<Nutrients>>,
-                response: Response<ArrayList<Nutrients>>
+                call: Call<ArrayList<Ingredients>>,
+                response: Response<ArrayList<Ingredients>>
             ) {
                 if (response.isSuccessful && response.body()?.size!! > 0) {
                     populateNutrients(response.body())
                 }
             }
 
-            override fun onFailure(call: Call<ArrayList<Nutrients>>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<Ingredients>>, t: Throwable) {
                 Log.i("--TAG--", "error in nutrient details = $t")
             }
 
@@ -82,12 +82,12 @@ class IngredientsFragment(bundleData: Bundle) : Fragment(),ArchitecturalFunction
 
     }
 
-    private fun populateNutrients(nutrients: ArrayList<Nutrients>?) {
-        Log.i("--TAG--", "inside nutrients")
+    private fun populateNutrients(nutrients: ArrayList<Ingredients>?) {
+        Log.i("--TAG--", "inside ingredients")
         if (nutrients != null) {
-            nutrientsAdapter = nutrients.let { NutrientsAdapter(it) }
-            binding.rvNutrition.adapter = nutrientsAdapter
-            nutrientsAdapter.notifyDataSetChanged()
+            ingredientsAdapter = nutrients.let { IngredientsAdapter(it) }
+            binding.rvNutrition.adapter = ingredientsAdapter
+            ingredientsAdapter.notifyDataSetChanged()
         }
 
     }

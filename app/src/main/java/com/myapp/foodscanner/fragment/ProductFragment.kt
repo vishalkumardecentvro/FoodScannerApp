@@ -9,10 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.material.tabs.TabLayout
 import com.myapp.foodscanner.*
-import com.myapp.foodscanner.adapter.NutrientsAdapter
+import com.myapp.foodscanner.adapter.IngredientsAdapter
 import com.myapp.foodscanner.adapter.ViewPagerAdapter
 import com.myapp.foodscanner.data.AllProducts
-import com.myapp.foodscanner.data.Nutrients
 import com.myapp.foodscanner.databinding.FragmentProductBinding
 import com.squareup.picasso.Picasso
 import retrofit2.Call
@@ -24,7 +23,7 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
 
     private lateinit var barcode: String
     private lateinit var binding: FragmentProductBinding
-    private lateinit var nutrientsAdapter: NutrientsAdapter
+    private lateinit var nutrientsAdapter: IngredientsAdapter
     private lateinit var bundle: Bundle
     //private lateinit var viewModel
 

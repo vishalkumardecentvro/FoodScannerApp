@@ -20,7 +20,7 @@ class ViewPagerAdapter(fragmentActivity: FragmentActivity, bundle: Bundle) :
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> IngredientsFragment(bundleData)
-            1 -> NutrientFragment()
+            1 -> NutrientFragment(bundleData)
             else -> {
                 IngredientsFragment(bundleData)
             }

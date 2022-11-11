@@ -3,17 +3,18 @@ package com.myapp.foodscanner.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.myapp.foodscanner.data.Nutrients
+import com.myapp.foodscanner.data.Ingredients
 import com.myapp.foodscanner.databinding.RvIngredientsBinding
 
-class NutrientsAdapter(var nutrientsList: ArrayList<Nutrients>) :
-    RecyclerView.Adapter<NutrientsAdapter.ViewHolder>() {
+class IngredientsAdapter(var nutrientsList: ArrayList<Ingredients>) :
+    RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
     inner class ViewHolder(var binding: RvIngredientsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(nutrients: Nutrients) {
-            binding.tvNutrient.text = nutrients.name +" "+ nutrients.amount+" g"
+        fun bind(nutrients: Ingredients) {
+            binding.tvNutrient.text = nutrients.name
+
         }
 
     }

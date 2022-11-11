@@ -1,8 +1,8 @@
 package com.myapp.foodscanner.data
 
-data class Nutrients(
+data class Ingredients(
     var id : Int,
     var name : String,
-    var amount : String
+    var quantity : String
 ) {
 }
