@@ -105,28 +105,6 @@ class ProductFragment : Fragment(), ArchitecturalFunctions {
                     }
                     binding.vpIngredientsAndNutrients.adapter = ViewPagerAdapter(requireActivity(),bundle)
 
-//                    if (response.body()?.size!! > 0) {
-//
-//                        val nutrients = response.body()?.get(0)?.let { Product.getNutrients(it.id) }
-//
-//                        nutrients?.enqueue(object : Callback<ArrayList<Nutrients>> {
-//                            override fun onResponse(
-//                                call: Call<ArrayList<Nutrients>>,
-//                                response: Response<ArrayList<Nutrients>>
-//                            ) {
-//                                if (response.isSuccessful && response.body()?.size!! > 0) {
-//                                    populateNutrients(response.body())
-//                                }
-//                            }
-//
-//                            override fun onFailure(call: Call<ArrayList<Nutrients>>, t: Throwable) {
-//                                Log.i("--TAG--", "error in nutrient details = $t")
-//                            }
-//
-//                        })
-//
-//                    }
-
                 } else {
                     Toast.makeText(
                         requireContext(),

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.myapp.foodscanner.ArchitecturalFunctions
 import com.myapp.foodscanner.FoodService
 import com.myapp.foodscanner.Retrofit
@@ -16,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class IngredientsFragment(bundleData: Bundle) : Fragment(),ArchitecturalFunctions {
+class IngredientsFragment(bundleData: Bundle) : Fragment(),ArchitecturalFunctions  {
 
     private var productId = bundleData.getInt("productId")
 
@@ -41,8 +42,9 @@ class IngredientsFragment(bundleData: Bundle) : Fragment(),ArchitecturalFunction
         super.onViewCreated(view, savedInstanceState)
         instantiate()
         initialize()
-        listen()
         load()
+        listen()
+
     }
 
     override fun instantiate() {
@@ -55,6 +57,8 @@ class IngredientsFragment(bundleData: Bundle) : Fragment(),ArchitecturalFunction
     }
 
     override fun listen() {
+
+
 
     }
 
@@ -88,7 +92,15 @@ class IngredientsFragment(bundleData: Bundle) : Fragment(),ArchitecturalFunction
             ingredientsAdapter = nutrients.let { IngredientsAdapter(it) }
             binding.rvNutrition.adapter = ingredientsAdapter
             ingredientsAdapter.notifyDataSetChanged()
+
+            ingredientsAdapter.clickIngredinet(object : IngredientsAdapter.onIngredientClick{
+                override fun ingredient() {
+                    Toast.makeText(requireContext(),"Ingredient clicked",Toast.LENGTH_SHORT).show()
+                }
+
+            })
         }
 
     }
+
 }

@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:id="@+id/mcvNutrientsOrIngredients"
+    android:layout_width="150dp"
+    android:layout_height="150dp"
     android:layout_margin="5dp"
+    android:layout_marginEnd="10dp"
     app:elevation="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivIngredient"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
 
         <TextView
-            android:id="@+id/tvNutrient"
+            android:id="@+id/tvIngredient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="5dp"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="5dp"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tvReadMore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:padding="5dp"
-            android:layout_gravity="center_vertical"
-            android:text="Read more.."
-            android:textColor="@color/pink_200"
-            android:textSize="16sp" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvReadMore"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_weight="0"-->
+        <!--            android:padding="5dp"-->
+        <!--            android:layout_gravity="center_vertical"-->
+        <!--            android:text="Read more.."-->
+        <!--            android:textColor="@color/pink_200"-->
+        <!--            android:textSize="16sp" />-->
 
     </LinearLayout>
 

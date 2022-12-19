@@ -5,15 +5,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.myapp.foodscanner.data.Ingredients
 import com.myapp.foodscanner.databinding.RvIngredientsBinding
+import com.squareup.picasso.Picasso
 
-class IngredientsAdapter(var nutrientsList: ArrayList<Ingredients>) :
+class IngredientsAdapter(var ingredientList: ArrayList<Ingredients>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
+
+    private var ingredientClick: onIngredientClick ? = null;
 
     inner class ViewHolder(var binding: RvIngredientsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(nutrients: Ingredients) {
-            binding.tvNutrient.text = nutrients.name
+        fun bind(ingredient: Ingredients) {
+            binding.tvIngredient.text = ingredient.name
+            if (ingredient.image != null)
+                Picasso.get().load(ingredient.image).into(binding.ivIngredient)
+
+            binding.mcvNutrientsOrIngredients.setOnClickListener{
+                ingredientClick?.ingredient()
+            }
 
         }
 
@@ -29,11 +38,19 @@ class IngredientsAdapter(var nutrientsList: ArrayList<Ingredients>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(nutrientsList.get(position))
+        holder.bind(ingredientList.get(position))
     }
 
     override fun getItemCount(): Int {
-        return nutrientsList.size
+        return ingredientList.size
+    }
+
+    interface onIngredientClick {
+        fun ingredient()
+    }
+
+    fun clickIngredinet(onIngredientClick: onIngredientClick) {
+        this.ingredientClick = onIngredientClick
     }
 
 

@@ -6,19 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentContainerView
 import com.myapp.foodscanner.ArchitecturalFunctions
 import com.myapp.foodscanner.FoodService
+import com.myapp.foodscanner.R
 import com.myapp.foodscanner.Retrofit
-import com.myapp.foodscanner.adapter.IngredientsAdapter
 import com.myapp.foodscanner.adapter.NutrientsAdapter
-import com.myapp.foodscanner.data.Ingredients
 import com.myapp.foodscanner.data.Nutrients
 import com.myapp.foodscanner.databinding.FragmentNutrientBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class NutrientFragment(bundleData: Bundle) : Fragment(), ArchitecturalFunctions {
+class NutrientFragment(bundleData: Bundle) : Fragment(), ArchitecturalFunctions, NutrientsAdapter.OnNutrientClickInterface {
 
     private lateinit var binding: FragmentNutrientBinding
     private var productId = bundleData.getInt("productId")
@@ -47,6 +47,10 @@ class NutrientFragment(bundleData: Bundle) : Fragment(), ArchitecturalFunctions 
     }
 
     override fun instantiate() {
+
+        nutrientsAdapter = NutrientsAdapter(ArrayList())
+
+
 
     }
 
@@ -91,6 +95,9 @@ class NutrientFragment(bundleData: Bundle) : Fragment(), ArchitecturalFunctions 
 
     }
 
+    override fun onNutrient(adapterPosition: Int, nutrients: Nutrients) {
+        Log.i("--TAG--", "inside nutrient click = ${nutrients.nutrient_id}")
+    }
 
 
 }

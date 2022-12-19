@@ -2,6 +2,7 @@ package com.myapp.foodscanner
 
 import com.myapp.foodscanner.data.AllProducts
 import com.myapp.foodscanner.data.Ingredients
+import com.myapp.foodscanner.data.NutrientDetails
 import com.myapp.foodscanner.data.Nutrients
 import retrofit2.Call
 import retrofit2.Response
@@ -21,4 +22,7 @@ interface FoodService {
 
     @GET("product/nutrient/{product_id}")
     fun getNutrients(@Path("product_id") productId: Int): Call<ArrayList<Nutrients>>
+
+    @GET("product/nutrient/details/{nutrient_id}")
+    fun getNutrientDetails(@Path("nutrient_id") nutrientId: Int): Call<ArrayList<NutrientDetails>>
 }
