@@ -86,11 +86,33 @@ class NutrientFragment(bundleData: Bundle) : Fragment(), ArchitecturalFunctions,
     }
 
     private fun populateNutrients(nutrients: ArrayList<Nutrients>?) {
-        Log.i("--TAG--", "inside ingredients")
+
         if (nutrients != null) {
             nutrientsAdapter = nutrients.let { NutrientsAdapter(it) }
             binding.rvNutrition.adapter = nutrientsAdapter
             nutrientsAdapter.notifyDataSetChanged()
+
+            nutrientsAdapter.onClickNutrient(object : NutrientsAdapter.OnNutrientClickInterface{
+                override fun onNutrient(adapterPosition: Int, nutrients: Nutrients) {
+
+                    val fragmentManager = requireActivity().supportFragmentManager
+                    val fragmentTransaction = fragmentManager.beginTransaction()
+                    val nutrientsDescriptionFragment =  NutrientsDescriptionFragment()
+
+                    val bundle = Bundle()
+                    bundle.putSerializable("nutrients",nutrients)
+                    nutrientsDescriptionFragment.arguments = bundle
+
+                    fragmentTransaction.replace(
+                        requireActivity().findViewById<FragmentContainerView>(
+                            R.id.fragmentContainer
+                        ).id, nutrientsDescriptionFragment
+                    )
+                    fragmentTransaction.addToBackStack(null)
+                    fragmentTransaction.commit()
+                }
+
+            })
         }
 
     }

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.myapp.foodscanner.data.Nutrients
-import com.myapp.foodscanner.databinding.RvIngredientsBinding
+import com.myapp.foodscanner.databinding.RvNutrientsBinding
 import com.squareup.picasso.Picasso
 
 class NutrientsAdapter(var nutrientsList: ArrayList<Nutrients>) :
@@ -14,13 +14,21 @@ class NutrientsAdapter(var nutrientsList: ArrayList<Nutrients>) :
 
     private var onNutrientCLick : OnNutrientClickInterface?  = null
 
-    inner class ViewHolder(var binding: RvIngredientsBinding) :
+    inner class ViewHolder(var binding: RvNutrientsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(nutrients: Nutrients) {
-            binding.tvIngredient.text = nutrients.name + " " + nutrients.nutrient_quantity
+
+            binding.tvNutrient.text = nutrients.name
+            binding.tvQuantity.text = nutrients.nutrient_quantity
+            binding.tvPerServing.text = nutrients.nutrient_quantity_per_serving
+
             if (nutrients.image != null)
                 Picasso.get().load(nutrients.image).into(binding.ivIngredient)
+
+            binding.mcvNutrientsOrIngredients.setOnClickListener{
+                onNutrientCLick?.onNutrient(adapterPosition,nutrients)
+            }
 
 
 
@@ -31,8 +39,8 @@ class NutrientsAdapter(var nutrientsList: ArrayList<Nutrients>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         val inflater = LayoutInflater.from(parent.context)
-        val binding: RvIngredientsBinding =
-            RvIngredientsBinding.inflate(inflater, parent, false)
+        val binding: RvNutrientsBinding =
+            RvNutrientsBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
 
     }
@@ -45,7 +53,7 @@ class NutrientsAdapter(var nutrientsList: ArrayList<Nutrients>) :
         return nutrientsList.size
     }
 
-    fun onClickItem(onClick : OnNutrientClickInterface){
+    fun onClickNutrient(onClick : OnNutrientClickInterface){
         this.onNutrientCLick = onClick
     }
 

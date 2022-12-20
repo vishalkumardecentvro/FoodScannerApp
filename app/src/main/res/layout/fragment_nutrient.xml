@@ -25,7 +25,8 @@
         android:text="@string/hello_blank_fragment"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/rv_ingredients" />
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/rv_nutrients" />
 
 </LinearLayout>

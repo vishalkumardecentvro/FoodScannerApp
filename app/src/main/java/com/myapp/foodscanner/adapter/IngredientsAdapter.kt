@@ -10,7 +10,7 @@ import com.squareup.picasso.Picasso
 class IngredientsAdapter(var ingredientList: ArrayList<Ingredients>) :
     RecyclerView.Adapter<IngredientsAdapter.ViewHolder>() {
 
-    private var ingredientClick: onIngredientClick ? = null;
+    private var ingredientClick: onIngredientClick? = null;
 
     inner class ViewHolder(var binding: RvIngredientsBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -20,8 +20,8 @@ class IngredientsAdapter(var ingredientList: ArrayList<Ingredients>) :
             if (ingredient.image != null)
                 Picasso.get().load(ingredient.image).into(binding.ivIngredient)
 
-            binding.mcvNutrientsOrIngredients.setOnClickListener{
-                ingredientClick?.ingredient()
+            binding.mcvNutrientsOrIngredients.setOnClickListener {
+                ingredientClick?.ingredient(ingredient)
             }
 
         }
@@ -46,7 +46,7 @@ class IngredientsAdapter(var ingredientList: ArrayList<Ingredients>) :
     }
 
     interface onIngredientClick {
-        fun ingredient()
+        fun ingredient(ingredient: Ingredients)
     }
 
     fun clickIngredinet(onIngredientClick: onIngredientClick) {

@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.DescriptionOfNutrientOrIngredientFragment">
+    tools:context=".fragment.NutrientsDescriptionFragment">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,7 +12,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvProductName"
+            android:id="@+id/tvNutrientName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -28,9 +29,17 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/tvQuantityPerServing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
 
         <ImageView
-            android:id="@+id/ivIngredientOrNutrientImage"
+            android:id="@+id/ivNutrient"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_margin="5dp"
